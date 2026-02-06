@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Portfolio – Kanagalekshmi B</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+  background:#f1f5f9;
+  font-family:system-ui;
+}
+
+/* Common module box */
+.module{
+  background:white;
+  border-radius:18px;
+  padding:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  height:100%;
+}
+
+/* Stretch columns equally */
+.row.g-4 > [class*="col-"]{
+  display:flex;
+}
+
+/* Skill tag */
+.tag{
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:14px;
+  margin:5px;
+  background:#e0f2fe;
+  color:#0369a1;
+}
+
+/* Project cards */
+.project-box{
+  background:#020617;
+  color:white;
+  border-radius:16px;
+  padding:25px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:0.3s;
+}
+
+.project-box:hover{
+  transform:scale(1.04);
+}
+
+.project-box h5{
+  min-height:48px;
+}
+
+/* Year highlight */
+.year{
+  font-weight:bold;
+  color:#0ea5e9;
+}
+
+footer{
+  background:#f8fafc;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container py-5">
+
+<!-- PROFILE & SKILLS -->
+<div class="row g-4">
+
+  <div class="col-lg-4">
+    <div class="module">
+      <h2>Kanagalekshmi B</h2>
+      <p class="text-muted">CSE Student</p>
+      <p>
+        Passionate Computer Science student with a strong interest in
+        Full Stack Development, UI/UX Design, and smart retail systems.
+      </p>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="module">
+      <h4>Skills</h4>
+      <span class="tag">HTML</span>
+      <span class="tag">CSS</span>
+      <span class="tag">JavaScript</span>
+      <span class="tag">Bootstrap</span>
+      <span class="tag">Go (Golang)</span>
+      <span class="tag">Python</span>
+      <span class="tag">MySQL</span>
+      <span class="tag">SQLite</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- PROJECTS -->
+<div class="row g-4 mt-3">
+  <div class="col-12">
+    <div class="module">
+      <h4 class="mb-4">Projects</h4>
+
+      <div class="row g-4 align-items-stretch">
+
+        <div class="col-md-4">
+          <div class="project-box">
+            <h5>Smart Retail 360</h5>
+            <p>
+              Full stack supermarket stock management system with alerts,
+              barcode handling, and analytics dashboard.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="project-box">
+            <h5>Kamaraj Learning Management System</h5>
+            <p>
+              KLMS is a full stack application for efficient data management
+              and analysis using modern web technologies.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="project-box">
+            <h5>Blood Donor Availability System</h5>
+            <p>
+              Web application to quickly locate nearby blood donors during
+              emergency situations.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- JOURNEY & CONTACT -->
+<div class="row g-4 mt-3">
+
+  <div class="col-lg-6">
+    <div class="module">
+      <h4>Academic Journey</h4>
+      <p><span class="year">2022</span> – Started Web Development</p>
+      <p><span class="year">2024</span> – Built Full Stack & ML Projects</p>
+      <p><span class="year">2026</span> – Final Year Project (Retail 360)</p>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="module">
+      <h4>Contact</h4>
+      <p>Email: yourmail@email.com</p>
+      <p>Phone: +91 XXXXXXXXXX</p>
+      <button class="btn btn-primary mt-2">Get in Touch</button>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<footer class="text-center text-muted py-3">
+  © 2026 Kanagalekshmi B – Student Portfolio
+</footer>
+
+</body>
+</html>
