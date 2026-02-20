@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html ng-app="plannerApp">
+<head>
+<meta charset="UTF-8">
+<title>Daily Planner</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+<style>
+:root{
+  --primary:#6366f1;
+  --high:#ef4444;
+  --medium:#f59e0b;
+  --low:#10b981;
+}
+
+body{
+  margin:0;
+  font-family:Segoe UI, sans-serif;
+  background:linear-gradient(120deg,#eef2ff,#fdf2f8,#ecfeff);
+}
+
+/* LOGIN SCREEN */
+.loginWrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.loginBox{
+  background:white;
+  padding:40px;
+  border-radius:16px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.1);
+  width:320px;
+}
+.loginBox h2{
+  margin-bottom:20px;
+  color:var(--primary);
+}
+.loginBox input{
+  width:100%;
+  padding:10px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+.loginBox button{
+  width:100%;
+  padding:10px;
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+.error{
+  color:red;
+  margin-top:10px;
+}
+
+/* APP */
+.container{
+  padding:40px 60px;
+}
+
+.title{
+  font-size:32px;
+  font-weight:700;
+  color:var(--primary);
+  margin-bottom:25px;
+}
+
+.inputArea{
+  display:flex;
+  gap:10px;
+  max-width:700px;
+  margin-bottom:20px;
+}
+.inputArea input, select{
+  padding:12px;
+  border-radius:12px;
+  border:2px solid #e5e7eb;
+  font-size:14px;
+}
+.inputArea input{
+  flex:1;
+}
+.inputArea button{
+  padding:12px 20px;
+  border:none;
+  border-radius:12px;
+  background:var(--primary);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.progressBox{
+  max-width:700px;
+  margin:15px 0 30px 0;
+}
+.progressBar{
+  height:14px;
+  border-radius:20px;
+  background:#e5e7eb;
+  overflow:hidden;
+}
+.progressFill{
+  height:100%;
+  background:var(--primary);
+  transition:.3s;
+}
+
+.card{
+  background:white;
+  max-width:700px;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  gap:10px;
+}
+.card span{
+  flex:1;
+  font-size:15px;
+}
+.completed{
+  text-decoration:line-through;
+  color:#9ca3af;
+}
+
+.tag{
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:12px;
+  color:white;
+  font-weight:600;
+}
+.high{background:var(--high);}
+.medium{background:var(--medium);}
+.low{background:var(--low);}
+
+.deleteBtn, .editBtn, .saveBtn, .cancelBtn{
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.deleteBtn{ background:#ef4444; }
+.editBtn{ background:#3b82f6; }
+.saveBtn{ background:#10b981; }
+.cancelBtn{ background:#6b7280; }
+
+.filters{
+  margin-top:25px;
+}
+.filters button{
+  margin-right:10px;
+  padding:8px 18px;
+  border-radius:25px;
+  border:none;
+  cursor:pointer;
+  background:#e0e7ff;
+}
+
+.logoutBtn{
+  float:right;
+  padding:6px 14px;
+  border:none;
+  background:#ef4444;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body ng-controller="plannerCtrl">
+
+<!-- LOGIN SCREEN -->
+<div class="loginWrapper" ng-show="!isLoggedIn">
+  <div class="loginBox">
+    <h2>Login</h2>
+    <input type="text" ng-model="loginUser" placeholder="Username">
+    <input type="password" ng-model="loginPass" placeholder="Password">
+    <button ng-click="login()">Login</button>
+    <div class="error" ng-show="loginError">Invalid credentials</div>
+  </div>
+</div>
+
+<!-- PLANNER -->
+<div class="container" ng-show="isLoggedIn">
+
+<button class="logoutBtn" ng-click="logout()">Logout</button>
+
+<div class="title">Task Master Hub</div>
+
+<div class="inputArea">
+  <input type="text" ng-model="newTask" placeholder="Enter task">
+  <select ng-model="priority">
+    <option value="high">High</option>
+    <option value="medium">Medium</option>
+    <option value="low">Low</option>
+  </select>
+  <button ng-click="addTask()">Add</button>
+</div>
+
+<div class="progressBox">
+  <div>{{completedCount()}} of {{tasks.length}} completed</div>
+  <div class="progressBar">
+    <div class="progressFill" ng-style="{'width': progress() + '%'}"></div>
+  </div>
+</div>
+
+<div class="card" ng-repeat="task in tasks | filter:{done:filterStatus}">
+
+  <input type="checkbox" ng-model="task.done">
+
+  <!-- VIEW MODE -->
+  <span ng-if="!task.editing" ng-class="{'completed':task.done}">
+    {{task.name}}
+  </span>
+
+  <!-- EDIT MODE -->
+  <input type="text" ng-if="task.editing" ng-model="task.name" style="flex:1;padding:6px;border-radius:6px;border:1px solid #ccc;">
+
+  <div class="tag" ng-class="task.priority">
+    {{task.priority}}
+  </div>
+
+  <!-- Buttons -->
+  <button class="editBtn" ng-if="!task.editing" ng-click="editTask(task)">Edit</button>
+  <button class="saveBtn" ng-if="task.editing" ng-click="saveTask(task)">Save</button>
+  <button class="cancelBtn" ng-if="task.editing" ng-click="cancelEdit(task)">Cancel</button>
+  <button class="deleteBtn" ng-click="deleteTask($index)">Delete</button>
+
+</div>
+
+<div class="filters">
+  <button ng-click="filterStatus=''">All</button>
+  <button ng-click="filterStatus=false">Pending</button>
+  <button ng-click="filterStatus=true">Completed</button>
+</div>
+
+</div>
+
+<script>
+angular.module("plannerApp",[])
+.controller("plannerCtrl",function($scope){
+
+$scope.isLoggedIn = false;
+$scope.loginError = false;
+
+const validUser = "Kanaga";
+const validPass = "1234";
+
+$scope.login = function(){
+  if($scope.loginUser === validUser && $scope.loginPass === validPass){
+    $scope.isLoggedIn = true;
+    $scope.loginError = false;
+  } else {
+    $scope.loginError = true;
+  }
+};
+
+$scope.logout = function(){
+  $scope.isLoggedIn = false;
+  $scope.loginUser = "";
+  $scope.loginPass = "";
+};
+
+$scope.tasks=[
+  {name:"Study AngularJS",priority:"high",done:false},
+  {name:"Internal Preparation",priority:"medium",done:true}
+];
+
+$scope.priority="medium";
+
+$scope.addTask=function(){
+  if($scope.newTask){
+    $scope.tasks.push({
+      name:$scope.newTask,
+      priority:$scope.priority,
+      done:false,
+      editing:false
+    });
+    $scope.newTask="";
+  }
+};
+
+$scope.deleteTask=function(i){
+  $scope.tasks.splice(i,1);
+};
+
+$scope.editTask=function(task){
+  task.originalName = task.name;
+  task.editing = true;
+};
+
+$scope.saveTask=function(task){
+  task.editing = false;
+};
+
+$scope.cancelEdit=function(task){
+  task.name = task.originalName;
+  task.editing = false;
+};
+
+$scope.completedCount=function(){
+  return $scope.tasks.filter(t=>t.done).length;
+};
+
+$scope.progress=function(){
+  if($scope.tasks.length===0) return 0;
+  return ($scope.completedCount()/$scope.tasks.length)*100;
+};
+
+});
+</script>
+
+</body>
+</html>
